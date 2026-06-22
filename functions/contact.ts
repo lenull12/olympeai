@@ -1,6 +1,7 @@
 interface ContactBody {
   email: string
   prenom?: string
+  telephone?: string
   token: string
 }
 
@@ -43,6 +44,10 @@ export async function onRequestPost(context: { request: Request; env: Record<str
           <tr>
             <td style="padding:8px 12px;background:#f5f5f5;font-weight:600">Email</td>
             <td style="padding:8px 12px"><a href="mailto:${body.email}">${body.email}</a></td>
+          </tr>
+          <tr>
+            <td style="padding:8px 12px;background:#f5f5f5;font-weight:600">Téléphone</td>
+            <td style="padding:8px 12px">${body.telephone || "—"}</td>
           </tr>
         </table>
         <p style="font-family:sans-serif;color:#666;margin-top:24px;font-size:12px">

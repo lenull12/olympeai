@@ -18,6 +18,7 @@ export default function FinalCTA() {
     const formData = new FormData(form);
     const email = formData.get("email") as string;
     const prenom = formData.get("prenom") as string;
+    const telephone = formData.get("telephone") as string;
 
     try {
       const res = await fetch("/contact", {
@@ -26,6 +27,7 @@ export default function FinalCTA() {
         body: JSON.stringify({
           email,
           prenom,
+          telephone,
           token: turnstileToken,
         }),
       });
@@ -65,21 +67,24 @@ export default function FinalCTA() {
 
           <form
             onSubmit={handleSubmit}
-            className="mx-auto mt-6 flex max-w-md flex-col gap-3"
+            className="mx-auto mt-6 flex max-w-md flex-col gap-4"
           >
-            <label htmlFor="prenom" className="sr-only">
-              Prénom
-            </label>
-            <input
-              id="prenom"
-              type="text"
-              name="prenom"
-              placeholder="Votre prénom"
-              className="w-full rounded-full border border-border-strong bg-card px-5 py-3 text-sm text-foreground placeholder:text-foreground-alt focus:border-foreground-alt"
-            />
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <label htmlFor="email" className="sr-only">
-                Adresse email
+            <div className="text-left">
+              <label htmlFor="prenom" className="mb-1.5 block text-sm text-foreground-alt">
+                Prénom <span className="text-foreground-alt/50">(facultatif)</span>
+              </label>
+              <input
+                id="prenom"
+                type="text"
+                name="prenom"
+                placeholder="Jean"
+                className="w-full rounded-xl border border-border-strong bg-card px-5 py-3.5 text-sm text-foreground placeholder:text-foreground-alt/40 focus:border-foreground-alt focus:outline-none"
+              />
+            </div>
+
+            <div className="text-left">
+              <label htmlFor="email" className="mb-1.5 block text-sm text-foreground-alt">
+                Adresse email <span className="text-red-400/60">*</span>
               </label>
               <input
                 id="email"
@@ -87,24 +92,38 @@ export default function FinalCTA() {
                 name="email"
                 required
                 placeholder="vous@cabinet.fr"
-                className="w-full flex-1 rounded-full border border-border-strong bg-card px-5 py-3 text-sm text-foreground placeholder:text-foreground-alt focus:border-foreground-alt"
+                className="w-full rounded-xl border border-border-strong bg-card px-5 py-3.5 text-sm text-foreground placeholder:text-foreground-alt/40 focus:border-foreground-alt focus:outline-none"
               />
-              <button
-                type="submit"
-                disabled={status === "sending" || !turnstileToken}
-                className="shrink-0 rounded-full bg-white px-6 py-3 text-sm font-medium text-black transition-transform hover:scale-[1.03] disabled:opacity-60"
-              >
-                {status === "sending" ? "Envoi..." : "Être rappelé"}
-              </button>
             </div>
 
-            <div className="flex justify-center">
+            <div className="text-left">
+              <label htmlFor="telephone" className="mb-1.5 block text-sm text-foreground-alt">
+                Téléphone <span className="text-foreground-alt/50">(facultatif)</span>
+              </label>
+              <input
+                id="telephone"
+                type="tel"
+                name="telephone"
+                placeholder="06 12 34 56 78"
+                className="w-full rounded-xl border border-border-strong bg-card px-5 py-3.5 text-sm text-foreground placeholder:text-foreground-alt/40 focus:border-foreground-alt focus:outline-none"
+              />
+            </div>
+
+            <div className="flex justify-center pt-2">
               <Turnstile
                 siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
                 onSuccess={(token) => setTurnstileToken(token)}
                 onExpire={() => setTurnstileToken(null)}
               />
             </div>
+
+            <button
+              type="submit"
+              disabled={status === "sending" || !turnstileToken}
+              className="w-full rounded-xl bg-white px-6 py-3.5 text-sm font-medium text-black transition-transform hover:scale-[1.02] disabled:opacity-60"
+            >
+              {status === "sending" ? "Envoi en cours..." : "Envoyer ma demande"}
+            </button>
           </form>
 
           {status === "sent" && (
