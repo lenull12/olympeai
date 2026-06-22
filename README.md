@@ -29,18 +29,23 @@ Génère le dossier `out/` — c'est ce dossier qu'il faut déployer.
 
 ## Déploiement sur Cloudflare Pages
 
-1. Connecter le repo Git à Cloudflare Pages, ou faire un déploiement direct (`wrangler pages deploy out`).
+1. Connecter le repo Git à Cloudflare Pages, ou faire un déploiement direct (`npx wrangler pages deploy out`).
 2. Paramètres de build :
+   - **Framework preset** : Next.js (Static HTML Export)
    - **Build command** : `npm run build`
    - **Build output directory** : `out`
    - **Node version** : 18 ou plus
-3. Aucune variable d'environnement n'est nécessaire (0 backend).
+3. **Variables d'environnement (build)** à configurer dans Cloudflare Pages → votre projet → **Settings → Environment variables** :
+   | Variable | Valeur |
+   |---|---|
+   | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | `0x4AAAAAADg0WHxTIPc8uIVX` |
+   | `TURNSTILE_SECRET_KEY` | `0x4AAAAAADg0WHextnbvU1rXgnv7ZTHuGPs` |
+   | `RESEND_API_KEY` | Votre clé API Resend |
+   | `CONTACT_EMAIL` | Email où vous recevez les notifications |
 
 ## À configurer avant mise en production
 
-- **Web3Forms** (`src/components/sections/FinalCTA.tsx`) : remplacer `YOUR_WEB3FORMS_ACCESS_KEY` par votre vraie clé d'accès, obtenue sur web3forms.com.
-- **Cal.com** (`src/components/sections/FinalCTA.tsx`) : remplacer le lien `https://cal.com/olympeai/decouverte` et l'attribut `data-cal-link` par votre vrai lien de réservation. Pour l'embed JS officiel (popup Cal.com), suivre la doc cal.com/docs/embed et ajouter leur script dans `layout.tsx`.
-- **Mentions légales / RGPD** (`src/app/mentions-legales` et `src/app/rgpd`) : compléter les champs `[à compléter]` (raison sociale, SIREN/SIRET, adresse, email de contact).
+- **Mentions légales / RGPD** (`src/app/mentions-legales` et `src/app/rgpd`) : vérifier que tous les champs sont complétés (raison sociale, SIREN/SIRET, adresse, email de contact).
 - **Domaine** : `metadataBase` dans `src/app/layout.tsx` est réglé sur `https://olympeai.fr`.
 
 ## Structure

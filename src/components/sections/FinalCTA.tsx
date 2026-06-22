@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { Turnstile } from "@marsidev/react-turnstile";
 import Reveal from "@/components/ui/Reveal";
 
 export default function FinalCTA() {
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle"
   );
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -14,18 +16,24 @@ export default function FinalCTA() {
 
     const form = e.currentTarget;
     const formData = new FormData(form);
-    // Remplacer par la vraie clé d'accès Web3Forms avant mise en production
-    formData.append("access_key", "YOUR_WEB3FORMS_ACCESS_KEY");
+    const email = formData.get("email") as string;
+    const prenom = formData.get("prenom") as string;
 
     try {
-      const res = await fetch("https://api.web3forms.com/submit", {
+      const res = await fetch("/contact", {
         method: "POST",
-        body: formData,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          prenom,
+          token: turnstileToken,
+        }),
       });
-      const data = await res.json();
-      if (data.success) {
+
+      if (res.ok) {
         setStatus("sent");
         form.reset();
+        setTurnstileToken(null);
       } else {
         setStatus("error");
       }
@@ -50,56 +58,53 @@ export default function FinalCTA() {
           </p>
         </Reveal>
 
-        {/* Bloc d'intégration Cal.com — remplacer data-cal-link par votre lien réel */}
-        <Reveal delay={0.15} className="mt-10">
-          <div className="overflow-hidden rounded-2xl border border-border-strong bg-card">
-            <div className="flex min-h-[320px] flex-col items-center justify-center gap-5 p-8 sm:p-12">
-              <p className="text-sm text-foreground-alt">
-                Choisissez un créneau directement ci-dessous
-              </p>
-              <a
-                href="https://cal.com/olympeai/decouverte"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-full bg-white px-8 py-3.5 text-sm font-medium text-black transition-transform hover:scale-[1.03]"
-                data-cal-link="olympeai/decouverte"
-              >
-                Réserver mon appel découverte
-              </a>
-              <span className="text-xs text-foreground-alt">
-                30 minutes · visioconférence ou téléphone
-              </span>
-            </div>
-          </div>
-        </Reveal>
-
         <Reveal delay={0.25} className="mt-10">
           <p className="text-sm text-foreground-alt">
-            Vous préférez être recontacté ? Laissez-nous vos coordonnées.
+            Laissez-nous vos coordonnées, on vous rappelle sous 24h.
           </p>
 
           <form
             onSubmit={handleSubmit}
-            className="mx-auto mt-6 flex max-w-md flex-col gap-3 sm:flex-row"
+            className="mx-auto mt-6 flex max-w-md flex-col gap-3"
           >
-            <label htmlFor="email" className="sr-only">
-              Adresse email
+            <label htmlFor="prenom" className="sr-only">
+              Prénom
             </label>
             <input
-              id="email"
-              type="email"
-              name="email"
-              required
-              placeholder="vous@cabinet.fr"
-              className="w-full flex-1 rounded-full border border-border-strong bg-card px-5 py-3 text-sm text-foreground placeholder:text-foreground-alt focus:border-foreground-alt"
+              id="prenom"
+              type="text"
+              name="prenom"
+              placeholder="Votre prénom"
+              className="w-full rounded-full border border-border-strong bg-card px-5 py-3 text-sm text-foreground placeholder:text-foreground-alt focus:border-foreground-alt"
             />
-            <button
-              type="submit"
-              disabled={status === "sending"}
-              className="shrink-0 rounded-full bg-white px-6 py-3 text-sm font-medium text-black transition-transform hover:scale-[1.03] disabled:opacity-60"
-            >
-              {status === "sending" ? "Envoi..." : "Être rappelé"}
-            </button>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <label htmlFor="email" className="sr-only">
+                Adresse email
+              </label>
+              <input
+                id="email"
+                type="email"
+                name="email"
+                required
+                placeholder="vous@cabinet.fr"
+                className="w-full flex-1 rounded-full border border-border-strong bg-card px-5 py-3 text-sm text-foreground placeholder:text-foreground-alt focus:border-foreground-alt"
+              />
+              <button
+                type="submit"
+                disabled={status === "sending" || !turnstileToken}
+                className="shrink-0 rounded-full bg-white px-6 py-3 text-sm font-medium text-black transition-transform hover:scale-[1.03] disabled:opacity-60"
+              >
+                {status === "sending" ? "Envoi..." : "Être rappelé"}
+              </button>
+            </div>
+
+            <div className="flex justify-center">
+              <Turnstile
+                siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+                onSuccess={(token) => setTurnstileToken(token)}
+                onExpire={() => setTurnstileToken(null)}
+              />
+            </div>
           </form>
 
           {status === "sent" && (
