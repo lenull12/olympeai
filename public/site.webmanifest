@@ -1,0 +1,21 @@
+{
+  "name": "OlympeAI",
+  "short_name": "OlympeAI",
+  "description": "L'intelligence au service de votre métier",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

@@ -20,6 +20,11 @@ export const metadata: Metadata = {
     locale: "fr_FR",
     type: "website",
   },
+  icons: {
+    icon: "/icon.png",
+    apple: "/apple-icon.png",
+  },
+  manifest: "/site.webmanifest",
   robots: {
     index: true,
     follow: true,
