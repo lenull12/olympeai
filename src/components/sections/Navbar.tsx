@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 
 const links = [
   { label: "Fonctionnement", href: "#fonctionnement" },
@@ -10,9 +10,15 @@ const links = [
   { label: "Contact", href: "#contact" },
 ];
 
+const metiers = [
+  { label: "Avocats", href: "/avocats" },
+];
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [metiersOpen, setMetiersOpen] = useState(false);
+  const [metiersMobileOpen, setMetiersMobileOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -39,7 +45,7 @@ export default function Navbar() {
     >
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 sm:px-8">
         <a
-          href="#"
+          href="/"
           className="text-lg font-semibold tracking-widest2 text-foreground"
           aria-label="OlympeAI — accueil"
         >
@@ -49,6 +55,49 @@ export default function Navbar() {
         </a>
 
         <ul className="hidden items-center gap-9 md:flex">
+          {/* Dropdown Métiers */}
+          <li
+            className="relative"
+            onMouseEnter={() => setMetiersOpen(true)}
+            onMouseLeave={() => setMetiersOpen(false)}
+          >
+            <button
+              className="flex items-center gap-1 text-sm text-foreground-alt transition-colors hover:text-foreground"
+              aria-expanded={metiersOpen}
+            >
+              Métiers
+              <ChevronDown
+                size={14}
+                className={`transition-transform duration-200 ${
+                  metiersOpen ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+            <AnimatePresence>
+              {metiersOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 6 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute top-full left-0 pt-2"
+                >
+                  <div className="min-w-[160px] rounded-xl border border-border-strong bg-card p-1.5 shadow-xl">
+                    {metiers.map((m) => (
+                      <a
+                        key={m.href}
+                        href={m.href}
+                        className="block rounded-lg px-3 py-2 text-sm text-foreground-alt transition-colors hover:bg-white/5 hover:text-foreground"
+                      >
+                        {m.label}
+                      </a>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </li>
+
           {links.map((link) => (
             <li key={link.href}>
               <a
@@ -88,6 +137,46 @@ export default function Navbar() {
             className="overflow-hidden border-t border-border-subtle bg-black md:hidden"
           >
             <ul className="flex flex-col gap-1 px-5 py-4">
+              {/* Métiers accordion mobile */}
+              <li>
+                <button
+                  onClick={() => setMetiersMobileOpen((v) => !v)}
+                  className="flex w-full items-center justify-between py-3 text-base text-foreground-alt"
+                >
+                  Métiers
+                  <ChevronDown
+                    size={16}
+                    className={`transition-transform duration-200 ${
+                      metiersMobileOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+                <AnimatePresence>
+                  {metiersMobileOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="pl-4 pb-2">
+                        {metiers.map((m) => (
+                          <a
+                            key={m.href}
+                            href={m.href}
+                            onClick={() => setOpen(false)}
+                            className="block py-2 text-sm text-foreground-alt transition-colors hover:text-foreground"
+                          >
+                            {m.label}
+                          </a>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </li>
+
               {links.map((link) => (
                 <li key={link.href}>
                   <a

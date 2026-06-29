@@ -61,7 +61,7 @@ export default function Pricing() {
                   🐉 Offre Fondateur — 5 cabinets pilotes
                 </h3>
                 <p className="mt-1 text-sm text-foreground-alt">
-                  <strong className="text-white">1 mois entièrement gratuit</strong> · Configuration personnalisée incluse · <strong className="text-white">Aucun engagement</strong> — vous décidez après avoir vu ce que ça change
+                  <strong className="text-white">15 jours entièrement gratuits</strong> · Configuration personnalisée incluse · <strong className="text-white">Aucun engagement</strong> — vous décidez après avoir vu ce que ça change
                 </p>
               </div>
               <a

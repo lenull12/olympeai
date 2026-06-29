@@ -266,7 +266,7 @@ export default function Hero() {
           className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 py-2 text-xs text-foreground-alt backdrop-blur-sm transition-colors hover:border-white/30 hover:text-foreground"
         >
           <span className="text-[10px]">🐉</span>
-          5 cabinets pilotes — <strong className="text-white">1 mois gratuit</strong> · Config incluse · Sans engagement
+          5 cabinets pilotes — <strong className="text-white">15 jours gratuits</strong> · Config incluse · Sans engagement
           <span className="text-[10px]">→</span>
         </a>
       </motion.div>
